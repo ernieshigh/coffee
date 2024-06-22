@@ -1,11 +1,13 @@
 import { getProductById } from "../services/Menu.js";
+import { addToCart } from "../services/Order.js";
 
-export class ProductsPage extends HTMLElement {
+export default class ProductsPage extends HTMLElement {
   #user = {
     name: "",
     phone: "",
     email: "",
   };
+
   constructor() {
     super();
 
@@ -18,7 +20,7 @@ export class ProductsPage extends HTMLElement {
     this.root.appendChild(styles);
 
     async function loadCSS() {
-      const request = await fetch("/components/ProductsPage.css");
+      const request = await fetch("../coffee/components/ProductsPage.css");
       styles.textContent = await request.text();
     }
     loadCSS();
@@ -28,7 +30,9 @@ export class ProductsPage extends HTMLElement {
     if (this.dataset.productId) {
       this.product = await getProductById(this.dataset.productId);
       this.root.querySelector("h2").textContent = this.product.name;
-      this.root.querySelector("img").src = `/data/images/${this.product.image}`;
+      this.root.querySelector(
+        "img"
+      ).src = `../coffee/data/images/${this.product.image}`;
       this.root.querySelector(".description").textContent =
         this.product.description;
       this.root.querySelector(

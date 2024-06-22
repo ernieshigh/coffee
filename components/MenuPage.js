@@ -1,17 +1,23 @@
-export class MenuPage extends HTMLElement {
+import API from "../services/API.js";
+import ProductItem from "./ProductItems.js";
+
+export default class MenuPage extends HTMLElement {
   constructor() {
     super();
+
     this.root = this.attachShadow({ mode: "open" });
 
+    const template = document.getElementById("menu-page-template");
+    const content = template.content.cloneNode(true);
     const styles = document.createElement("style");
+    this.root.appendChild(content);
     this.root.appendChild(styles);
-    async function loadStyle() {
-      const request = await fetch("/components/MenuPage.css");
-      const css = await request.text();
-      styles.textContent = css;
-    }
 
-    loadStyle();
+    async function loadCSS() {
+      const request = await fetch("../coffee/components/MenuPage.css");
+      styles.textContent = await request.text();
+    }
+    loadCSS();
   }
 
   connectedCallback() {

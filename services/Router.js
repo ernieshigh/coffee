@@ -15,13 +15,16 @@ const Router = {
 
     Router.go(location.pathname);
   },
+
   go: (route, addToHistory = true) => {
+    console.log(route);
     if (addToHistory) {
       history.pushState({ route }, "", route);
     }
     let pageElement = null;
+
     switch (route) {
-      case "/":
+      case "/coffee/":
         pageElement = document.createElement("menu-page");
         break;
       case "/order":
@@ -34,9 +37,24 @@ const Router = {
         }
         break;
     }
+
     if (pageElement) {
-      document.querySelector("main").innerHTML = "";
-      document.querySelector("main").appendChild(pageElement);
+      // get current page element
+      let currentPage = document.querySelector("main").firstElementChild;
+      if (currentPage) {
+        let fadeOut = currentPage.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 200,
+        });
+        fadeOut.addEventListener("finish", () => {
+          currentPage.remove();
+          document.querySelector("main").appendChild(pageElement);
+          let fadeIn = pageElement.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 200,
+          });
+        });
+      } else {
+        document.querySelector("main").appendChild(pageElement);
+      }
     }
 
     window.scrollX = 0;
